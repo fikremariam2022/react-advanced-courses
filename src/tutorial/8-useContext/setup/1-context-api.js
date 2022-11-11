@@ -1,7 +1,8 @@
-import React, { useState, useContext } from 'react';
-import { data } from '../../../data';
+import React, { useState, useContext } from "react";
+import { data } from "../../../data";
 // more components
 // fix - context api, redux (for more complex cases)
+const PersonContext = React.createContext();
 
 const ContextAPI = () => {
   const [people, setPeople] = useState(data);
@@ -23,20 +24,24 @@ const List = ({ people, removePerson }) => {
     <>
       {people.map((person) => {
         return (
-          <SinglePerson
-            key={person.id}
-            {...person}
-            removePerson={removePerson}
-          />
+          <PersonContext.Provider value={{ removePerson }}>
+            <SinglePerson
+              key={person.id}
+              {...person}
+              removePerson={removePerson}
+            />
+          </PersonContext.Provider>
         );
       })}
     </>
   );
 };
 
-const SinglePerson = ({ id, name, removePerson }) => {
+const SinglePerson = ({ id, name }) => {
+  const { removePerson } = useContext(PersonContext);
+  console.log(data);
   return (
-    <div className='item'>
+    <div className="item">
       <h4>{name}</h4>
       <button onClick={() => removePerson(id)}>remove</button>
     </div>
